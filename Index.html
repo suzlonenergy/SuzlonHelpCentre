@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio HelpDesk - Corporate Communication</title>
+    
+    <style>
+        :root {
+            --primary-color: #007A8D;
+            --primary-hover: #005F6E;
+            --background-color: #F4F6F8;
+            --card-bg: #FFFFFF;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --border-color: #D1D5DB;
+            --border-radius: 6px;
+            --success-color: #10B981;
+            --admin-color: #F59E0B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-main);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        /* --- LOGIN SCREEN STYLES --- */
+        .login-wrapper {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: var(--background-color); z-index: 2000;
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        .login-card {
+            background-color: var(--card-bg); padding: 3rem; border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 6px solid var(--primary-color);
+            width: 90%; max-width: 800px;
+        }
+
+        .login-options { display: flex; gap: 2rem; align-items: stretch; margin-top: 2rem; }
+        
+        /* Base box styling with hover animation */
+        .login-box { 
+            flex: 1; padding: 2.5rem 2rem; border-radius: var(--border-radius); 
+            display: flex; flex-direction: column;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .login-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+
+        /* Primary Action: Create New */
+        .login-box.primary-path {
+            background-color: #F0F9FA; /* Subtle teal tint */
+            border: 2px solid var(--primary-color);
+        }
+        
+        /* Secondary Action: Track/Edit (Yellow/Amber Theme) */
+        .login-box.secondary-path {
+            background-color: #FFFBEB; /* Soft warm yellow tint */
+            border: 2px solid #FCD34D; /* Warm amber border */
+        }
+
+        .login-box h3 { margin-bottom: 0.5rem; }
+        .login-box.primary-path h3 { color: var(--primary-color); }
+        .login-box.secondary-path h3 { color: #92400E; /* Dark amber text */ }
+        
+        .divider { 
+            display: flex; align-items: center; justify-content: center; 
+            font-weight: bold; color: var(--text-muted); font-size: 0.9rem;
+        }
+
+        /* --- HELPDESK CONTAINER --- */
+        .helpdesk-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            transition: max-width 0.3s ease;
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap; 
+            gap: 1rem;
+        }
+
+        .form-header h2 { color: var(--primary-color); font-weight: 600; }
+
+        .layout-wrapper { display: flex; gap: 1.5rem; align-items: flex-start; }
+        .main-column { flex: 1; min-width: 0; }
+        .log-column { width: 320px; flex-shrink: 0; }
+        .sticky-card { position: sticky; top: 2rem; }
+
+        .form-card {
+            background-color: var(--card-bg); padding: 2rem; border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 1.5rem; border-top: 4px solid var(--primary-color);
+        }
+
+        .admin-card { border-top-color: var(--admin-color); background-color: #FFFBEB; }
+        .context-card { border-top-color: #9CA3AF; }
+
+        .form-card h3 {
+            margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-main);
+            border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;
+        }
+
+        .grid-row { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .grid-row > .input-group { flex: 1; min-width: 200px; }
+        .three-col > .input-group { flex: 1 1 calc(33.333% - 1rem); }
+        .full-width { width: 100%; margin-bottom: 1.5rem; }
+
+        label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
+        .required { color: #DC2626; }
+        .note { font-size: 0.8rem; color: #DC2626; font-weight: normal; margin-top: 0.25rem; display: block; }
+        .pending-note { color: #DC2626; font-weight: bold; }
+
+        input[type="text"], select, textarea {
+            width: 100%; padding: 0.75rem; border: 1px solid var(--border-color);
+            border-radius: var(--border-radius); font-size: 0.95rem; transition: border-color 0.2s; background-color: #fff;
+        }
+
+        input[type="text"]:focus, select:focus, textarea:focus {
+            outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(0, 122, 141, 0.1);
+        }
+
+        input[readonly], select:disabled { background-color: #F9FAFB; color: var(--text-muted); cursor: not-allowed; }
+        input.admin-unlocked { background-color: #ffffff; color: var(--text-main); cursor: text; border-color: var(--admin-color); }
+
+        .radio-group { display: flex; gap: 1.5rem; align-items: center; }
+        .radio-group label { display: flex; align-items: center; gap: 0.4rem; font-weight: normal; margin: 0; cursor: pointer; }
+
+        .file-drop-area {
+            position: relative; display: flex; align-items: center; justify-content: center;
+            padding: 1.5rem; border: 2px dashed var(--border-color); border-radius: var(--border-radius);
+            background-color: #FAFAFA; transition: 0.2s; text-align: center; color: var(--text-muted);
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
+        .file-drop-area:hover { background-color: #F3F4F6; border-color: var(--primary-color); }
+        .file-drop-area input[type="file"] { position: absolute; left: 0; top: 0; height: 100%; width: 100%; cursor: pointer; opacity: 0; }
+        .file-name-text { font-size: 0.85rem; max-width: 90%; overflow: hidden; text-overflow: ellipsis; display: inline-block; }
+
+        .form-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem; }
+        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: var(--border-radius); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s; }
+        .btn-primary { background-color: var(--primary-color); color: white; }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-secondary { background-color: #E5E7EB; color: var(--text-main); }
+        .btn-secondary:hover { background-color: #D1D5DB; }
+        .btn-admin { background-color: var(--admin-color); color: white; }
+        .btn-admin:hover { background-color: #D97706; }
+        .btn-danger { background-color: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; padding: 0.4rem 1rem; font-size: 0.85rem; }
+        .btn-danger:hover { background-color: #FECACA; }
+
+        .hidden { display: none !important; }
+
+        .request-item {
+            padding: 0.75rem; margin-bottom: 0.5rem; background-color: #ffffff;
+            border: 1px solid #FCD34D; border-radius: 4px; cursor: pointer;
+            transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .request-item:hover { background-color: #FEF3C7; border-color: var(--admin-color); transform: translateY(-1px); }
+        .request-item-title { font-weight: 700; color: var(--primary-color); font-size: 0.9rem; margin-bottom: 0.2rem; }
+        .request-item-meta { color: var(--text-muted); font-size: 0.8rem; }
+
+        .log-item { padding-bottom: 0.75rem; margin-bottom: 0.75rem; border-bottom: 1px solid #FDE68A; font-size: 0.85rem; color: #4B5563; }
+        .log-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .log-date { font-size: 0.75rem; color: #92400E; font-weight: 600; margin-bottom: 0.25rem; display: block; }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); display: flex; align-items: center; justify-content: center;
+            z-index: 3000; backdrop-filter: blur(3px);
+        }
+        .modal-content {
+            background-color: var(--card-bg); padding: 2rem; border-radius: var(--border-radius); text-align: center;
+            max-width: 500px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 6px solid var(--success-color);
+        }
+        .modal-req-id {
+            font-size: 1.15rem; font-weight: 700; color: var(--primary-color);
+            background-color: #F0F9FA; border: 1px dashed var(--primary-color);
+            padding: 0.75rem; border-radius: 4px; margin: 1rem 0; letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- === LOGIN SCREEN === -->
+    <div id="loginScreen" class="login-wrapper">
+        <div class="login-card">
+            <h2 style="color: var(--primary-color); text-align: center;">Studio HelpDesk Gateway</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-top: 0.5rem;">Corporate Communication Services</p>
+            
+            <div class="login-options">
+                <!-- Option 1: New Request (Primary Path) -->
+                <div class="login-box primary-path">
+                    <h3>Create New Request</h3>
+                    <p class="note" style="color: var(--text-muted); margin-bottom: 1.5rem;">Start a fresh task requirement for the Central Studio.</p>
+                    <div class="input-group" style="flex-grow: 1;">
+                        <label>Employee ID</label>
+                        <input type="text" id="loginEmpId" placeholder="e.g. 33890" value="33890">
+                    </div>
+                    <button class="btn btn-primary full-width" style="margin-top: 1rem;" onclick="handleNewRequestLogin()">Start New Request</button>
+                </div>
+
+                <div class="divider">OR</div>
+
+                <!-- Option 2: Track/Edit Request (Yellow/Amber Path) -->
+                <div class="login-box secondary-path">
+                    <h3>Track / Edit Request</h3>
+                    <p class="note" style="color: #B45309; margin-bottom: 1.5rem;">Enter your existing Task Code to view, edit, or add files.</p>
+                    <div class="input-group" style="flex-grow: 1;">
+                        <label style="color: #92400E;">Task Code</label>
+                        <input type="text" id="loginTaskCode" placeholder="e.g. REQ-CORPCOM-10001" style="border-color: #FCD34D;">
+                        <span id="loginError" class="note hidden" style="margin-top: 0.5rem; display: block;">Task Code not found in database.</span>
+                    </div>
+                    <button class="btn btn-admin full-width" style="margin-top: 1rem;" onclick="handleTaskCodeLogin()">Access Request</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- === MAIN HELPDESK APP (Hidden initially) === -->
+    <div class="helpdesk-container hidden" id="mainContainer">
+        <header class="form-header">
+            <h2>Corporate Communication HelpDesk</h2>
+            
+            <nav style="display: flex; gap: 1.5rem; align-items: center;">
+                <a href="presentation.html" target="_blank" style="color: var(--primary-color); text-decoration: none; font-weight: 600; font-size: 0.95rem; border-bottom: 2px solid transparent; transition: border-color 0.2s;" onmouseover="this.style.borderBottom='2px solid var(--primary-color)'" onmouseout="this.style.borderBottom='2px solid transparent'">
+                    📊 View Presentation
+                </a>
+                <button class="btn btn-admin" id="toggleAdminBtn" onclick="toggleAdminMode()">Switch to Admin Mode</button>
+                <button class="btn btn-secondary" onclick="signOut()">Sign Out / Home</button>
+            </nav>
+        </header>
+
+        <!-- Admin Control Panel (Top) -->
+        <div id="adminPanel" class="form-card admin-card hidden">
+            <h3 style="color: #92400E; border-bottom-color: #FDE68A;">Admin Control Panel</h3>
+            <p class="note" style="color: #92400E; margin-bottom: 1.5rem; font-size: 0.9rem;">
+                <strong>Admin Mode Active:</strong> Edit "Requester" details to submit tasks on behalf of others. Click a request from the sidebar or search by Task Code below to modify it.
+            </p>
+            <div class="grid-row">
+                <div class="input-group">
+                    <label>Edit Existing Request (Task Code)</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="searchReqId" placeholder="e.g. REQ-CORPCOM-10001" style="border-color: #FDE68A;">
+                        <button type="button" class="btn btn-admin" onclick="loadRequest()">Load Request</button>
+                    </div>
+                    <span id="adminSearchError" class="note hidden">Request ID not found in database.</span>
+                </div>
+            </div>
+        </div>
+
+        <form action="#" method="POST" id="mainForm">
+            <input type="hidden" id="currentEditId" value="">
+
+            <div class="layout-wrapper">
+                <!-- Main Form Area (Left side) -->
+                <div class="main-column">
+                    
+                    <!-- Context Card -->
+                    <div class="form-card context-card">
+                        <h3>Requester Details</h3>
+                        <div class="grid-row three-col">
+                            <div class="input-group">
+                                <label>Requester / On Behalf Of <span class="required" id="reqStar" style="display:none;">*</span></label>
+                                <input type="text" id="requesterName" readonly required>
+                            </div>
+                            <div class="input-group">
+                                <label>Department <span class="required" id="deptStar" style="display:none;">*</span></label>
+                                <input type="text" id="department" value="Central Studio" readonly required>
+                            </div>
+                            <div class="input-group">
+                                <label>Contact No. <span class="required" id="contactStar" style="display:none;">*</span></label>
+                                <input type="text" id="contact" value="+91-9876543210" readonly required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Tasks -->
+                    <div id="tasks-container">
+                        <!-- Task blocks injected by JavaScript -->
+                    </div>
+
+                    <button type="button" class="btn btn-secondary full-width" style="border: 2px dashed var(--border-color);" onclick="addTask()">
+                        + Add Another Task
+                    </button>
+
+                    <!-- Footer / Submission Card -->
+                    <div class="form-card">
+                        <h3>Approval & Final Submission</h3>
+                        <div class="grid-row" style="align-items: flex-start;">
+                            <div class="input-group">
+                                <label>Approval Status <span class="required">*</span></label>
+                                <div class="radio-group" style="margin-top: 1rem;">
+                                    <label><input type="radio" name="approvalStatus" value="now" checked> Have approval document now</label>
+                                    <label><input type="radio" name="approvalStatus" value="later"> Will upload later</label>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group" id="approvalUploadZone">
+                                <label>Approval Attachment <span class="note">(Applies to all tasks)</span></label>
+                                <div class="file-drop-area" style="padding: 1rem;">
+                                    <span class="file-name-text" id="globalApprovalName">Click or Drag & Drop approval mail here</span>
+                                    <input type="file" id="approvalAttachment" accept=".msg,.pdf,.eml" onchange="updateFileName(this, 'globalApprovalName')">
+                                </div>
+                            </div>
+
+                            <div class="input-group hidden" id="approvalUploadMessage">
+                                <div style="background-color: #FFFBEB; border: 1px solid #FCD34D; padding: 1.5rem; border-radius: 6px; font-size: 0.95rem; color: #92400E; text-align: center; margin-top: 0.5rem;">
+                                    <strong>Note:</strong> Timelines start upon approval upload.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear Form</button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">Submit Request</button>
+                        </div>
+                    </div>
+
+                </div> <!-- End Main Column -->
+
+                <!-- Admin Log Sidebar (Right side, hidden by default) -->
+                <div class="log-column hidden" id="adminLogSidebar">
+                    <div class="form-card admin-card sticky-card" style="padding: 1.5rem;">
+                        
+                        <h3 style="color: #92400E; border-bottom-color: #FDE68A; margin-bottom: 1rem;">All Requests</h3>
+                        <div id="recentRequestsContainer" style="max-height: 250px; overflow-y: auto; padding-right: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px dashed #FDE68A; padding-bottom: 1rem;">
+                            <!-- List items injected here via JS -->
+                        </div>
+
+                        <h3 style="color: #92400E; border-bottom-color: #FDE68A; margin-bottom: 1rem;">Selected Activity Log</h3>
+                        <div id="logContainer" style="max-height: 250px; overflow-y: auto; padding-right: 0.5rem;">
+                            <p class="note" style="color: #92400E;" id="emptyLogText">No request loaded.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 style="color: var(--success-color); margin-bottom: 0.5rem; font-size: 1.75rem;">Success!</h2>
+            <p style="color: var(--text-muted);" id="modalActionText">Your response has been recorded.</p>
+            <div class="modal-req-id" id="modalReqId">REQ-CORPCOM-XXXXX</div>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">Please save this task code for future reference or edits.</p>
+            <button class="btn btn-primary" style="width: 100%;" onclick="closeModal()">Acknowledge</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA DICTIONARIES ---
+        const corpComData = {
+            "AV and films": ["AV/ film Development"],
+            "Design solutions": [
+                "Booklet", "Brochure", "Campaign design", "Cover page Design", 
+                "Digital Backdrop", "Explore banner", "IT UI design | Mobile", 
+                "Leaflet", "Logo Design", "Office/ Site/ Plant Branding", 
+                "Other Graphic design requirement (External)", "Other Graphic design requirement (Internal)", 
+                "Pamphlet", "Poster", "Presentation", "Report (Content & Design)", 
+                "Stage Backdrop", "Standee Design", "Word Template"
+            ],
+            "Digital & Social Media": [
+                "Social Media - Posts", "Suzlon Website - File Upload upto 5 files", 
+                "Suzlon Website - Graphic/ design updation", "Suzlon Website - New page creation", 
+                "Suzlon Website - Text updation"
+            ]
+        };
+
+        const timelineData = {
+            "AV/ film Development": 7, "Booklet": 4, "Brochure": 5, "Cover page Design": 1,
+            "Digital Backdrop": 1, "Banner Design": 1, "Leaflet": 1,
+            "Logo Design": 1, "Office/ Site/ Plant Branding": 1, "Other Graphic design requirement (External)": 2,
+            "Other Graphic design requirement (Internal)": 2, "Pamphlet": 1, "Poster": 1, "Report (Content & Design)": 3, 
+            "Stage Backdrop": 1, "Standee Design": 1, "Social Media - Posts": 1,
+            "Suzlon Website - File Upload upto 5 files": 1, "Suzlon Website - Graphic/ design updation": 1,
+            "Suzlon Website - New page creation": 3, "Suzlon Website - Text updation": 1, "Word Template": 1
+        };
+
+        // --- MOCK DATABASE (Populated with 10 dummy tasks) ---
+        const mockDatabase = {}; 
+        let globalEmployeeName = "Aditya Karande"; // Default mock name
+        let globalEmployeeDept = "Central Studio";
+        
+        function populateDummyData() {
+            const dummyNames = ["Aditya Karande", "Hemant Prajapati", "Dharini Mishra", "Anil Parmar", "Pawan Kumar"];
+            const dummyDepts = ["Central Studio", "Marketing", "HR", "Administration", "Operations"];
+            const dummyCategories = ["Design solutions", "AV and films", "Digital & Social Media"];
+            const dummySubCats = {
+                "Design solutions": ["Brochure", "Poster", "Logo Design", "Presentation"],
+                "AV and films": ["AV/ film Development"],
+                "Digital & Social Media": ["Social Media - Posts", "Suzlon Website - New page creation"]
+            };
+
+            for (let i = 1; i <= 10; i++) {
+                const reqId = `REQ-CORPCOM-100${i.toString().padStart(2, '0')}`;
+                const cat = dummyCategories[i % dummyCategories.length];
+                const subCatList = dummySubCats[cat];
+                const subCat = subCatList[i % subCatList.length];
+                
+                mockDatabase[reqId] = {
+                    id: reqId,
+                    requester: `${dummyNames[i % dummyNames.length]} (1000${i})`,
+                    department: dummyDepts[i % dummyDepts.length],
+                    contact: "+91-90000000" + i.toString().padStart(2, '0'),
+                    approval: i % 2 === 0 ? "now" : "later",
+                    tasks: [{ 
+                        category: cat, 
+                        subCategory: subCat, 
+                        description: `We need a new ${subCat.toLowerCase()} created for the upcoming quarterly review. Please process this on priority.`,
+                        hasAttachment: i % 3 === 0 ? true : false
+                    }],
+                    logs: [{ 
+                        date: `28 Sep 2026, 10:${(i*5).toString().padStart(2, '0')}`, 
+                        action: "Request initially created via Corporate Communication Portal." 
+                    }]
+                };
+            }
+        }
+        
+        let isAdminMode = false;
+        let taskCounter = 0;
+        const tasksContainer = document.getElementById('tasks-container');
+
+        // --- LOGIN & AUTH FUNCTIONS ---
+        function handleNewRequestLogin() {
+            const empId = document.getElementById('loginEmpId').value.trim();
+            if(!empId) {
+                alert("Please enter an Employee ID.");
+                return;
+            }
+
+            // Assign mock name based on the ID entered for this demo
+            const finalRequesterStr = `${globalEmployeeName} (${empId})`;
+            
+            // Hide Login, Show Main App
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainContainer').classList.remove('hidden');
+            
+            // Reset and prep form for new entry
+            resetForm(false); 
+            document.getElementById('requesterName').value = finalRequesterStr;
+            document.getElementById('department').value = globalEmployeeDept;
+            addTask();
+        }
+
+        function handleTaskCodeLogin() {
+            const code = document.getElementById('loginTaskCode').value.trim().toUpperCase();
+            const errorMsg = document.getElementById('loginError');
+            
+            if (!code || !mockDatabase[code]) {
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+            errorMsg.classList.add('hidden');
+
+            // Hide Login, Show Main App
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainContainer').classList.remove('hidden');
+
+            // Pre-load the requested task code
+            resetForm(true);
+            loadRequest(code);
+        }
+
+        function signOut() {
+            // Hide Main App, Show Login Screen
+            document.getElementById('mainContainer').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('loginTaskCode').value = '';
+            document.getElementById('loginError').classList.add('hidden');
+
+            // Force turn off admin mode if active
+            if(isAdminMode) toggleAdminMode();
+            
+            resetForm(true); // completely clear everything
+        }
+
+        // --- FILE UPLOAD HELPER ---
+        function updateFileName(inputElement, labelId) {
+            const label = document.getElementById(labelId);
+            if (inputElement.files && inputElement.files.length > 0) {
+                const fileNames = Array.from(inputElement.files).map(f => f.name).join(', ');
+                label.textContent = `Attached: ${fileNames}`;
+                label.style.color = 'var(--primary-color)';
+                label.style.fontWeight = '600';
+            } else {
+                label.textContent = 'Click or Drag & Drop files here';
+                label.style.color = 'var(--text-muted)';
+                label.style.fontWeight = 'normal';
+            }
+        }
+
+        // --- ADMIN FEATURES ---
+        function toggleAdminMode() {
+            isAdminMode = !isAdminMode;
+            const btn = document.getElementById('toggleAdminBtn');
+            const panel = document.getElementById('adminPanel');
+            const sidebar = document.getElementById('adminLogSidebar');
+            const reqFields = ['requesterName', 'department', 'contact'];
+
+            if (isAdminMode) {
+                btn.textContent = "Exit Admin Mode";
+                btn.classList.replace('btn-admin', 'btn-secondary');
+                panel.classList.remove('hidden');
+                sidebar.classList.remove('hidden');
+                
+                reqFields.forEach(id => {
+                    const el = document.getElementById(id);
+                    el.removeAttribute('readonly');
+                    el.classList.add('admin-unlocked');
+                });
+                document.getElementById('reqStar').style.display = 'inline';
+                document.getElementById('deptStar').style.display = 'inline';
+                document.getElementById('contactStar').style.display = 'inline';
+
+                renderRecentRequests(); 
+            } else {
+                btn.textContent = "Switch to Admin Mode";
+                btn.classList.replace('btn-secondary', 'btn-admin');
+                panel.classList.add('hidden');
+                sidebar.classList.add('hidden');
+                document.getElementById('adminSearchError').classList.add('hidden');
+                document.getElementById('searchReqId').value = '';
+                
+                reqFields.forEach(id => {
+                    const el = document.getElementById(id);
+                    el.setAttribute('readonly', true);
+                    el.classList.remove('admin-unlocked');
+                });
+                
+                document.getElementById('reqStar').style.display = 'none';
+                document.getElementById('deptStar').style.display = 'none';
+                document.getElementById('contactStar').style.display = 'none';
+
+                if(document.getElementById('currentEditId').value !== "") {
+                    // If we were editing, just clear it and prep a new task form
+                    const empId = document.getElementById('loginEmpId').value || '33890';
+                    resetForm(false);
+                    document.getElementById('requesterName').value = `${globalEmployeeName} (${empId})`;
+                    document.getElementById('department').value = globalEmployeeDept;
+                    addTask();
+                }
+            }
+        }
+
+        function renderRecentRequests() {
+            const container = document.getElementById('recentRequestsContainer');
+            const sortedRequests = Object.values(mockDatabase).sort((a, b) => b.id.localeCompare(a.id));
+            
+            container.innerHTML = sortedRequests.map(req => `
+                <div class="request-item" onclick="loadRequest('${req.id}')">
+                    <div class="request-item-title">${req.id}</div>
+                    <div class="request-item-meta">${req.requester} | ${req.department}</div>
+                    <div class="request-item-meta" style="margin-top: 0.2rem; font-style: italic;">
+                        ${req.tasks[0]?.category}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadRequest(clickedReqId = null) {
+            let reqId = clickedReqId || document.getElementById('searchReqId').value.trim().toUpperCase();
+            
+            if (clickedReqId && document.getElementById('searchReqId')) {
+                document.getElementById('searchReqId').value = clickedReqId;
+            }
+
+            const errorSpan = document.getElementById('adminSearchError');
+            const logContainer = document.getElementById('logContainer');
+            
+            if (!reqId || !mockDatabase[reqId]) {
+                if(errorSpan) errorSpan.classList.remove('hidden');
+                if(logContainer) logContainer.innerHTML = '<p class="note" style="color: #92400E;">Request ID not found.</p>';
+                return;
+            }
+            
+            if(errorSpan) errorSpan.classList.add('hidden');
+            const data = mockDatabase[reqId];
+
+            document.getElementById('currentEditId').value = reqId;
+            document.getElementById('submitBtn').textContent = "Update Request";
+
+            document.getElementById('requesterName').value = data.requester;
+            document.getElementById('department').value = data.department;
+            document.getElementById('contact').value = data.contact;
+
+            document.querySelector(`input[name="approvalStatus"][value="${data.approval}"]`).checked = true;
+            document.querySelector(`input[name="approvalStatus"]`).dispatchEvent(new Event('change'));
+
+            tasksContainer.innerHTML = '';
+            taskCounter = 0;
+
+            data.tasks.forEach((task, index) => {
+                addTask();
+                const currentId = taskCounter; 
+                
+                const catSelect = document.getElementById(`category-${currentId}`);
+                catSelect.value = task.category;
+                catSelect.dispatchEvent(new Event('change')); 
+
+                const subCatSelect = document.getElementById(`subCategory-${currentId}`);
+                subCatSelect.value = task.subCategory;
+                subCatSelect.dispatchEvent(new Event('change')); 
+
+                document.getElementById(`description-${currentId}`).value = task.description;
+
+                if (task.hasAttachment) {
+                    const label = document.getElementById(`taskFileName-${currentId}`);
+                    label.textContent = "Attached: Previous_File_Upload.pdf";
+                    label.style.color = "var(--primary-color)";
+                    label.style.fontWeight = "600";
+                }
+            });
+
+            if(logContainer) {
+                const logHTML = data.logs.map(log => `
+                    <div class="log-item">
+                        <span class="log-date">${log.date}</span>
+                        ${log.action}
+                    </div>
+                `).join('');
+                logContainer.innerHTML = logHTML;
+            }
+        }
+
+        // --- TASK GENERATION ---
+        function addTask() {
+            taskCounter++;
+            const taskId = taskCounter;
+
+            const taskHTML = `
+                <div class="form-card" id="task-block-${taskId}" data-task-id="${taskId}">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="margin: 0; border: none; padding: 0;">Task #${taskId} Details</h3>
+                        ${taskId > 1 ? `<button type="button" class="btn btn-danger" onclick="removeTask(${taskId})">Remove</button>` : ''}
+                    </div>
+
+                    <div class="grid-row">
+                        <div class="input-group">
+                            <label>Category <span class="required">*</span></label>
+                            <select id="category-${taskId}" name="category[]" required>
+                                <option value="">Select Category...</option>
+                                ${Object.keys(corpComData).map(cat => `<option value="${cat}">${cat}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Sub-Category <span class="required">*</span></label>
+                            <select id="subCategory-${taskId}" name="subCategory[]" disabled required><option value="">Select Sub-Category...</option></select>
+                        </div>
+                    </div>
+
+                    <div class="grid-row">
+                        <div class="input-group">
+                            <label>Expected Delivery Date <span class="note">(Auto-Calculated, cutoff 4 PM)</span></label>
+                            <input type="text" id="expectedClosingTime-${taskId}" placeholder="Pending selection..." readonly>
+                        </div>
+                    </div>
+
+                    <div class="grid-row">
+                        <div class="input-group">
+                            <label>Request Description <span class="required">*</span></label>
+                            <textarea id="description-${taskId}" name="description[]" rows="3" placeholder="Provide specific details about your requirement..." required></textarea>
+                        </div>
+                    </div>
+
+                    <div class="grid-row">
+                        <div class="input-group">
+                            <label>Task Attachment <span class="note">(Images, reference docs, copy drafts, etc.)</span></label>
+                            <div class="file-drop-area" style="padding: 1rem;">
+                                <span class="file-name-text" id="taskFileName-${taskId}">Click or Drag & Drop task files here</span>
+                                <input type="file" id="taskAttachment-${taskId}" name="taskAttachment[]" multiple onchange="updateFileName(this, 'taskFileName-${taskId}')">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            tasksContainer.insertAdjacentHTML('beforeend', taskHTML);
+            bindTaskEvents(taskId);
+        }
+
+        function removeTask(taskId) {
+            const taskBlock = document.getElementById(`task-block-${taskId}`);
+            if (taskBlock) taskBlock.remove();
+        }
+
+        // --- LOGIC & CALCULATION ---
+        function calculateDeliveryDate(workingDays) {
+            let date = new Date();
+            if (date.getHours() >= 16) date.setDate(date.getDate() + 1);
+            while (date.getDay() === 0 || date.getDay() === 6) date.setDate(date.getDate() + 1);
+
+            let addedDays = 0;
+            if (!workingDays || isNaN(workingDays)) workingDays = 1;
+
+            while (addedDays < workingDays) {
+                date.setDate(date.getDate() + 1);
+                if (date.getDay() !== 0 && date.getDay() !== 6) addedDays++;
+            }
+            return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
+        }
+
+        function updateDeliveryDateDisplay(taskId) {
+            const subCategorySelect = document.getElementById(`subCategory-${taskId}`);
+            const expectedClosingTimeInput = document.getElementById(`expectedClosingTime-${taskId}`);
+            const globalStatus = document.querySelector('input[name="approvalStatus"]:checked').value;
+            const selectedSubCategory = subCategorySelect.value;
+
+            if (!selectedSubCategory) {
+                expectedClosingTimeInput.value = "Pending selection...";
+                expectedClosingTimeInput.className = ""; 
+                return;
+            }
+
+            if (globalStatus === 'later') {
+                expectedClosingTimeInput.value = "TBD (Timeline starts upon approval upload)";
+                expectedClosingTimeInput.className = "pending-note";
+            } else {
+                let requiredDays = timelineData[selectedSubCategory] || 2; 
+                expectedClosingTimeInput.value = calculateDeliveryDate(requiredDays);
+                expectedClosingTimeInput.className = "";
+                expectedClosingTimeInput.style.color = "var(--primary-color)";
+                expectedClosingTimeInput.style.fontWeight = "bold";
+            }
+        }
+
+        function updateAllDeliveryDates() {
+            document.querySelectorAll('.form-card[data-task-id]').forEach(task => {
+                updateDeliveryDateDisplay(task.getAttribute('data-task-id'));
+            });
+        }
+
+        function bindTaskEvents(taskId) {
+            const category = document.getElementById(`category-${taskId}`);
+            const subCategory = document.getElementById(`subCategory-${taskId}`);
+
+            category.addEventListener('change', function() {
+                const selectedCat = this.value;
+                subCategory.innerHTML = '<option value="">Select Sub-Category...</option>';
+                subCategory.disabled = true;
+                updateDeliveryDateDisplay(taskId);
+
+                if (selectedCat && corpComData[selectedCat]) {
+                    subCategory.disabled = false;
+                    corpComData[selectedCat].forEach(s => subCategory.add(new Option(s, s)));
+                }
+            });
+
+            subCategory.addEventListener('change', () => updateDeliveryDateDisplay(taskId));
+        }
+
+        // --- GLOBAL EVENT LISTENERS ---
+        document.querySelectorAll('input[name="approvalStatus"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'later') {
+                    document.getElementById('approvalUploadZone').classList.add('hidden');
+                    document.getElementById('approvalUploadMessage').classList.remove('hidden');
+                } else {
+                    document.getElementById('approvalUploadZone').classList.remove('hidden');
+                    document.getElementById('approvalUploadMessage').classList.add('hidden');
+                }
+                updateAllDeliveryDates();
+            });
+        });
+
+        function resetForm(skipAddInitialTask = false) {
+            tasksContainer.innerHTML = '';
+            taskCounter = 0;
+            document.querySelector('input[name="approvalStatus"][value="now"]').checked = true;
+            document.querySelector('input[name="approvalStatus"]').dispatchEvent(new Event('change'));
+            document.getElementById('currentEditId').value = "";
+            document.getElementById('submitBtn').textContent = "Submit Request";
+            
+            if(document.getElementById('logContainer')) {
+                document.getElementById('logContainer').innerHTML = '<p class="note" style="color: #92400E;">No request loaded.</p>';
+            }
+            
+            const globalLabel = document.getElementById('globalApprovalName');
+            globalLabel.textContent = 'Click or Drag & Drop approval mail here';
+            globalLabel.style.color = 'var(--text-muted)';
+            globalLabel.style.fontWeight = 'normal';
+            document.getElementById('approvalAttachment').value = "";
+            
+            if(!isAdminMode) {
+                // If resetting form for standard user, we re-apply their logged-in details
+                const empId = document.getElementById('loginEmpId').value || '33890';
+                document.getElementById('requesterName').value = `${globalEmployeeName} (${empId})`;
+                document.getElementById('department').value = globalEmployeeDept;
+                document.getElementById('contact').value = "+91-9876543210";
+            } else {
+                document.getElementById('requesterName').value = "";
+                document.getElementById('department').value = "";
+                document.getElementById('contact').value = "";
+                if(document.getElementById('searchReqId')) document.getElementById('searchReqId').value = "";
+            }
+
+            if(!skipAddInitialTask) {
+                addTask();
+            }
+        }
+
+        document.getElementById('mainForm').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            
+            const editId = document.getElementById('currentEditId').value;
+            const isUpdate = editId !== "";
+            const finalReqId = isUpdate ? editId : `REQ-CORPCOM-${Math.floor(10000 + Math.random() * 90000)}`;
+            const timestamp = new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+            const requestData = {
+                id: finalReqId,
+                requester: document.getElementById('requesterName').value,
+                department: document.getElementById('department').value,
+                contact: document.getElementById('contact').value,
+                approval: document.querySelector('input[name="approvalStatus"]:checked').value,
+                tasks: [],
+                logs: isUpdate ? mockDatabase[editId].logs : [{
+                    date: timestamp,
+                    action: "Request initially created via Corporate Communication Portal."
+                }]
+            };
+
+            if (isUpdate) {
+                requestData.logs.unshift({
+                    date: timestamp,
+                    action: `Request updated. Tasks re-configured.`
+                });
+            }
+
+            document.querySelectorAll('.form-card[data-task-id]').forEach(block => {
+                const id = block.getAttribute('data-task-id');
+                const fileInput = document.getElementById(`taskAttachment-${id}`);
+                const hasFiles = fileInput.files && fileInput.files.length > 0;
+                
+                requestData.tasks.push({
+                    category: document.getElementById(`category-${id}`).value,
+                    subCategory: document.getElementById(`subCategory-${id}`).value,
+                    description: document.getElementById(`description-${id}`).value,
+                    hasAttachment: hasFiles || (isUpdate && mockDatabase[editId].tasks.find(t => t.category === document.getElementById(`category-${id}`).value)?.hasAttachment)
+                });
+            });
+
+            mockDatabase[finalReqId] = requestData;
+
+            document.getElementById('modalReqId').textContent = finalReqId;
+            document.getElementById('modalActionText').textContent = isUpdate 
+                ? "Your request has been successfully updated." 
+                : "Your response has been recorded.";
+            document.getElementById('successModal').classList.remove('hidden');
+
+            if (isAdminMode) {
+                renderRecentRequests(); 
+                if (isUpdate) document.getElementById('searchReqId').value = finalReqId;
+            }
+        });
+
+        function closeModal() {
+            document.getElementById('successModal').classList.add('hidden');
+            if (isAdminMode && document.getElementById('currentEditId').value) {
+               loadRequest(); 
+            } else {
+                // Return home / log out if they submitted a new request
+                signOut();
+            }
+        }
+
+        // --- INIT ---
+        window.addEventListener('DOMContentLoaded', () => {
+            populateDummyData(); 
+            // We do NOT call addTask() here because we want the user to go through the login screen first
+        });
+    </script>
+</body>
+</html>

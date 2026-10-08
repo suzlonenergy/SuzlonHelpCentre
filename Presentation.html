@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studio HelpDesk Presentation</title>
+    <style>
+        :root {
+            --primary-color: #007A8D;
+            --bg-color: #F4F6F8;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --admin-color: #F59E0B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden; 
+            color: var(--text-main);
+        }
+
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            background-color: #ffffff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* --- Back Button Styling --- */
+        .back-btn {
+            position: absolute;
+            top: 3vh;
+            left: 3vw;
+            background-color: transparent;
+            color: var(--text-muted);
+            border: 1px solid #D1D5DB;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            z-index: 1000;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .slide {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            padding: 5vh 10vw; 
+            display: none;
+            flex-direction: column;
+            border-top: 8px solid var(--primary-color);
+        }
+
+        .slide.active {
+            display: flex;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-title {
+            color: var(--primary-color);
+            font-size: 2.6rem; 
+            font-weight: 700;
+            margin-bottom: 2vh;
+            border-bottom: 2px solid #E5E7EB;
+            padding-bottom: 1vh;
+        }
+
+        .content {
+            font-size: 1.3rem; 
+            line-height: 1.6;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        ul {
+            margin-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li { margin-bottom: 1.2vh; }
+        
+        .highlight { color: var(--primary-color); font-weight: 600; }
+
+        .title-slide {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-top: none;
+            background: linear-gradient(135deg, #ffffff 0%, #F4F6F8 100%);
+        }
+
+        .title-slide h1 {
+            color: var(--primary-color);
+            font-size: 4.5rem;
+            margin-bottom: 2vh;
+        }
+
+        .title-slide h2 {
+            color: var(--text-muted);
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 5vh;
+        }
+
+        .title-slide p { font-size: 1.3rem; color: var(--text-main); font-weight: 600; }
+
+        .split-layout {
+            display: flex;
+            gap: 3rem;
+            height: 100%;
+        }
+
+        .col { flex: 1; }
+        .col-box {
+            background-color: var(--bg-color);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid #D1D5DB;
+        }
+
+        .screenshot-img {
+            width: 100%;
+            height: auto;
+            max-height: 42vh; 
+            object-fit: contain; 
+            object-position: center;
+            border-radius: 8px;
+            border: 2px solid #D1D5DB;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2vh;
+            background-color: #ffffff; 
+        }
+
+        /* Excel Data Table Styles */
+        .excel-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #E5E7EB;
+            margin-top: 1vh;
+        }
+
+        .excel-table th, .excel-table td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .excel-table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        .excel-table tr:hover {
+            background-color: #F9FAFB;
+        }
+
+        /* Side Navigation Arrows */
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 122, 141, 0.1);
+            color: var(--primary-color);
+            border: none;
+            width: 60px;
+            height: 60px;
+            font-size: 2rem;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .nav-arrow:hover {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .nav-arrow:disabled {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .left-arrow { left: 2vw; }
+        .right-arrow { right: 2vw; }
+
+        /* Bottom Controls */
+        .controls {
+            position: absolute;
+            bottom: 2vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            padding: 0 4vw;
+            z-index: 10;
+        }
+        
+        .slide-counter {
+            background-color: #F4F6F8;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 600;
+            border: 1px solid #D1D5DB;
+        }
+
+        /* Flowchart Styles */
+        .flow-step {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+            background-color: #ffffff;
+        }
+        .flow-step h4 {
+            margin-bottom: 0.2rem;
+            font-size: 0.95rem;
+        }
+        .flow-step p {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            line-height: 1.2;
+        }
+        .flow-arrow {
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+        
+        <!-- Change href to the exact file name of your HelpDesk form -->
+        <a href="index.html" class="back-btn">&#8592; Back to HelpDesk</a>
+        
+        <!-- Floating Navigation Arrows -->
+        <button class="nav-arrow left-arrow" id="prevArrow" onclick="changeSlide(-1)" disabled>&#10094;</button>
+        <button class="nav-arrow right-arrow" id="nextArrow" onclick="changeSlide(1)">&#10095;</button>
+
+        <!-- Slide 1 -->
+        <div class="slide title-slide active" id="slide-1">
+            <h1>Studio HelpDesk</h1>
+            <h2>Powering Brand Transformation through Process Excellence</h2>
+            <div style="width: 150px; height: 5px; background-color: var(--primary-color); margin: 0 auto 3vh auto;"></div>
+            <p>Aditya Karande</p>
+            <p style="color: var(--text-muted); font-weight: normal;">Incharge - Central Studio</p>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="slide" id="slide-2">
+            <h2 class="slide-title">The Current Bottleneck</h2>
+            <div class="split-layout">
+                <div class="col col-box">
+                    <h3 style="color: #DC2626; margin-bottom: 2vh; font-size: 1.6rem;">Current State</h3>
+                    <ul>
+                        <li>Requests arrive via scattered emails, chats, and phone calls.</li>
+                        <li>Missing briefs and incomplete requirements.</li>
+                        <li>Unapproved requests bypassing management.</li>
+                        <li>Unrealistic and subjective deadlines.</li>
+                    </ul>
+                </div>
+                <div class="col col-box" style="border-color: var(--primary-color); background-color: #F0F9FA;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 2vh; font-size: 1.6rem;">HelpDesk Solution</h3>
+                    <ul>
+                        <li>A single, mandatory portal for all requests.</li>
+                        <li>Standardized inputs ensure brand compliance.</li>
+                        <li>Upfront managerial approvals required.</li>
+                        <li>Automated, objective SLA tracking.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="slide" id="slide-3">
+            <h2 class="slide-title">Portal Entry & Dual-Workflow Gateway</h2>
+            <div class="split-layout">
+                <div class="col col-box" style="border: 2px solid var(--primary-color); background-color: #F0F9FA;">
+                    <h3 style="color: var(--primary-color); margin-bottom: 1.2rem; font-size: 1.5rem;">1. Create New Request</h3>
+                    <ul>
+                        <li><span class="highlight">Employee ID Login:</span> Quick authentication using employee credentials.</li>
+                        <li><span class="highlight">Auto-Capture:</span> Automatically populates department and contact profiles.</li>
+                        <li><span class="highlight">Fresh Ticket Generation:</span> Immediately launches a clean task configuration block.</li>
+                    </ul>
+                </div>
+                <div class="col col-box" style="border: 2px solid #FCD34D; background-color: #FFFBEB;">
+                    <h3 style="color: #92400E; margin-bottom: 1.2rem; font-size: 1.5rem;">2. Track / Edit Request</h3>
+                    <ul>
+                        <li><span class="highlight" style="color: #92400E;">Task Code Access:</span> Direct entry via existing unique task code (e.g., REQ-CORPCOM-10001).</li>
+                        <li><span class="highlight" style="color: #92400E;">Instant Recovery:</span> Instantly reloads previous ticket configuration and history.</li>
+                        <li><span class="highlight" style="color: #92400E;">Seamless Updates:</span> Enables users to add delayed approvals or update active requirements.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4 -->
+        <div class="slide" id="slide-4">
+            <h2 class="slide-title">The Employee Experience</h2>
+            <div class="content">
+                <img src="Presentation/The Employee Experience.png" alt="Requester Details Screenshot" class="screenshot-img">
+                <ul>
+                    <li><span class="highlight">Auto-filled Details:</span> Requester and department information is captured automatically.</li>
+                    <li><span class="highlight">Clean Interface:</span> User-friendly design aligned closely with Suzlon branding.</li>
+                    <li><span class="highlight">Zero Learning Curve:</span> Guided dropdowns ensure employees only see relevant options.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 5 -->
+        <div class="slide" id="slide-5">
+            <h2 class="slide-title">Smart Timelines & Expectations</h2>
+            <div class="content">
+                <img src="Presentation/Smart Timelines & Expectations.png" alt="Delivery Date Screenshot" class="screenshot-img">
+                <ul>
+                    <li><span class="highlight">Automated SLAs:</span> Deadlines calculate automatically based on the specific asset type (e.g., AV vs. Brochure).</li>
+                    <li><span class="highlight">4 PM Cutoff:</span> Requests submitted late automatically shift to the next working day.</li>
+                    <li><span class="highlight">Working Days Only:</span> The system automatically skips weekends when calculating delivery targets.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 6 -->
+        <div class="slide" id="slide-6">
+            <h2 class="slide-title">Task Bundling & Targeted Attachments</h2>
+            <div class="content">
+                <img src="Presentation/Task Bundling & Targeted Attachments.png" alt="Task Attachment Screenshot" class="screenshot-img">
+                <ul>
+                    <li><span class="highlight">Multi-Asset Requests:</span> Submit multiple assets (e.g., Poster + Emailer) in one single ticket.</li>
+                    <li><span class="highlight">Task-Specific Uploads:</span> Upload briefs, copy, and reference images directly to the relevant task block.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 7 -->
+        <div class="slide" id="slide-7">
+            <h2 class="slide-title">Approval & Final Submission</h2>
+            <div class="content">
+                <img src="Presentation/Approval & Final Submission.png" alt="Approval Submission Screenshot" class="screenshot-img" onerror="this.src='https://dummyimage.com/1200x500/e5e7eb/6b7280.png&text=Screenshot:+Approval+&+Final+Submission'">
+                <ul>
+                    <li><span class="highlight">Flexible Workflows:</span> Choose to upload managerial approvals immediately or defer them to a later date.</li>
+                    <li><span class="highlight">SLA Protection:</span> Selecting "Will upload later" alerts the user that SLAs do not begin until the approval is provided.</li>
+                    <li><span class="highlight">Global Attachments:</span> A single, unified drop zone for the final email approval covering all bundled tasks.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 8 -->
+        <div class="slide" id="slide-8">
+            <h2 class="slide-title">The Admin Superpowers (Studio View)</h2>
+            <div class="content">
+                <img src="Presentation/Admin Mode.png" alt="Admin Mode Screenshot" class="screenshot-img" onerror="this.src='https://dummyimage.com/1200x500/e5e7eb/6b7280.png&text=Screenshot:+Admin+Mode'">
+                <ul>
+                    <li><span class="highlight">"On Behalf Of":</span> Admins can unlock fields to submit tasks for leadership.</li>
+                    <li><span class="highlight">Live Dashboard:</span> Instantly view, search, and load recent requests from the sidebar.</li>
+                    <li><span class="highlight">Audit Trail:</span> Every edit is timestamped and tracked in the Activity Log for complete transparency.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9 -->
+        <div class="slide" id="slide-9">
+            <h2 class="slide-title">Rollout & Next Steps</h2>
+            <div class="content">
+                <div class="col-box" style="margin-bottom: 1.5vh;">
+                    <span class="highlight" style="font-size: 1.4rem;">1. Phase 1: Pilot</span><br>
+                    Soft launch with frequent requesters (Corp Comm Internal Team) to test SLA accuracy and UI clarity.
+                </div>
+                <div class="col-box" style="margin-bottom: 1.5vh;">
+                    <span class="highlight" style="font-size: 1.4rem;">2. Phase 2: Integration</span><br>
+                    Connect the portal to the broader Suzlon HelpDesk infrastructure.
+                </div>
+                <div class="col-box">
+                    <span class="highlight" style="font-size: 1.4rem;">3. Phase 3: Organization-Wide Go-Live</span><br>
+                    All corporate communication formally flows exclusively through the Studio HelpDesk.
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10 -->
+        <div class="slide" id="slide-10">
+            <h2 class="slide-title">Application Workflow</h2>
+            <div class="content" style="justify-content: center;">
+                
+                <!-- Normal User Track -->
+                <div style="font-size: 0.85rem; font-weight: 600; color: var(--primary-color); margin-bottom: 0.3rem;">Standard Requirer & Tracking Workflow</div>
+                <div style="display: flex; align-items: center; gap: 0.3rem; margin-bottom: 1.2rem;">
+                    
+                    <div style="display: flex; flex-direction: column; gap: 0.15rem; flex: 1.1;">
+                        <div class="flow-step" style="border: 2px solid var(--primary-color); background-color: #F0F9FA; padding: 0.3rem;">
+                            <h4 style="color: var(--primary-color); margin-bottom: 0px; font-size: 0.8rem;">1A. Create New</h4>
+                            <p style="font-size: 0.6rem;">Employee ID login.</p>
+                        </div>
+                        <div class="flow-step" style="border: 2px solid #FCD34D; background-color: #FFFBEB; padding: 0.3rem;">
+                            <h4 style="color: #92400E; margin-bottom: 0px; font-size: 0.8rem;">1B. Track / Edit</h4>
+                            <p style="font-size: 0.6rem;">Task Code access.</p>
+                        </div>
+                    </div>
+
+                    <div class="flow-arrow" style="color: var(--primary-color);">&#10132;</div>
+                    
+                    <div class="flow-step" style="border: 2px solid var(--primary-color); background-color: #F0F9FA;">
+                        <h4 style="color: var(--primary-color);">2. Intake Profile</h4>
+                        <p>Auto-captures department profile.</p>
+                    </div>
+                    
+                    <div class="flow-arrow" style="color: var(--primary-color);">&#10132;</div>
+                    
+                    <div class="flow-step" style="border: 2px solid var(--primary-color); background-color: #F0F9FA;">
+                        <h4 style="color: var(--primary-color);">3. Configuration</h4>
+                        <p>Tasks bundled; SLA calculated.</p>
+                    </div>
+
+                    <div class="flow-arrow" style="color: var(--primary-color);">&#10132;</div>
+
+                    <div class="flow-step" style="border: 2px solid var(--primary-color); background-color: #F0F9FA;">
+                        <h4 style="color: var(--primary-color);">4. Attachments</h4>
+                        <p>Upload briefs & approvals.</p>
+                    </div>
+
+                    <div class="flow-arrow" style="color: var(--primary-color);">&#10132;</div>
+
+                    <div class="flow-step" style="border: 2px solid var(--primary-color); background-color: #F0F9FA;">
+                        <h4 style="color: var(--primary-color);">5. Submit Function</h4>
+                        <p>Generates Task Code (REQ-CORPCOM).</p>
+                    </div>
+                </div>
+
+                <!-- Admin Mode Track -->
+                <div style="font-size: 0.85rem; font-weight: 600; color: var(--admin-color); margin-bottom: 0.3rem;">Separate Management Track</div>
+                <div style="display: flex; align-items: center; gap: 0.4rem; background-color: #FFFBEB; padding: 0.8rem; border-radius: 8px; border: 2px dashed var(--admin-color);">
+                    <div class="flow-step" style="border: 2px solid var(--admin-color); background-color: #ffffff;">
+                        <h4 style="color: var(--admin-color);">Switch to Admin Mode</h4>
+                        <p>Elevated studio toggle independent of regular login.</p>
+                    </div>
+
+                    <div class="flow-arrow" style="color: var(--admin-color);">&#10132;</div>
+                    
+                    <div class="flow-step" style="border: 2px solid var(--admin-color); background-color: #ffffff;">
+                        <h4 style="color: var(--admin-color);">On Behalf Of Entry</h4>
+                        <p>Unlock fields to submit tasks for leadership.</p>
+                    </div>
+
+                    <div class="flow-arrow" style="color: var(--admin-color);">&#10132;</div>
+                    
+                    <div class="flow-step" style="border: 2px solid var(--admin-color); background-color: #ffffff;">
+                        <h4 style="color: var(--admin-color);">Live Dashboard & Audit Log</h4>
+                        <p>Search codes, manage tickets, & track activity logs.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Slide 11 (NEW: Excel Reference Data - Tasks, Timelines & Escalations) -->
+        <div class="slide" id="slide-11">
+            <h2 class="slide-title">Reference Matrix: Timelines & Escalations</h2>
+            <div class="content">
+                <p style="font-size: 1rem; color: var(--text-muted); margin-bottom: 1.5vh;">
+                    Backend data mapped from enterprise files to automate service level agreements (SLAs) and define escalation protocols:
+                </p>
+                <table class="excel-table">
+                    <thead>
+                        <tr>
+                            <th>Vertical / Category</th>
+                            <th>Sub-Category Example</th>
+                            <th>Default SLA Timeline</th>
+                            <th>Level 1 Escalation</th>
+                            <th>Level 2 Escalation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Corporate Communication</strong></td>
+                            <td>AV / Film Development</td>
+                            <td>7 Working Days</td>
+                            <td>Studio Lead / Manager</td>
+                            <td>Head of Corporate Communications</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Corporate Communication</strong></td>
+                            <td>Brochure / Booklet</td>
+                            <td>4 - 5 Working Days</td>
+                            <td>Senior Designer / Incharge</td>
+                            <td>Studio Lead / Manager</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Corporate Communication</strong></td>
+                            <td>Poster / Standee / Social Post</td>
+                            <td>1 Working Day</td>
+                            <td>Assigned Creative Executive</td>
+                            <td>Studio Incharge</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Digital & Web Services</strong></td>
+                            <td>Suzlon Website - New Page</td>
+                            <td>3 Working Days</td>
+                            <td>Web Administrator</td>
+                            <td>Head of Digital Communications</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="margin-top: 2vh; background-color: #F0F9FA; border-left: 4px solid var(--primary-color); padding: 1rem; border-radius: 4px; font-size: 0.9rem;">
+                    <strong>SLA Logic Rule:</strong> The system automatically factors in a 4:00 PM submission cutoff time and skips weekends to ensure accurate enterprise delivery expectations.
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Controls (Counter) -->
+        <div class="controls">
+            <span class="slide-counter" id="counter">1 / 11</span>
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 11; // Updated to 11 slides
+
+        function changeSlide(direction) {
+            document.getElementById(`slide-${currentSlide}`).classList.remove('active');
+            
+            currentSlide += direction;
+            
+            if (currentSlide < 1) currentSlide = 1;
+            if (currentSlide > totalSlides) currentSlide = totalSlides;
+            
+            document.getElementById(`slide-${currentSlide}`).classList.add('active');
+            document.getElementById('counter').innerText = `${currentSlide} / ${totalSlides}`;
+            
+            // Enable/Disable side arrows
+            document.getElementById('prevArrow').disabled = currentSlide === 1;
+            document.getElementById('nextArrow').disabled = currentSlide === totalSlides;
+        }
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') {
+                if (currentSlide < totalSlides) changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                if (currentSlide > 1) changeSlide(-1);
+            }
+        });
+    </script>
+</body>
+</html>
