@@ -3,84 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studio HelpDesk - Corporate Communication</title>
+    <title>Studio HelpDesk - Corporate Communication | Suzlon Group</title>
     
     <style>
         :root {
-            --primary-color: #007A8D;
-            --primary-hover: #005F6E;
-            --background-color: #F4F6F8;
+            /* Suzlon Brand Colors */
+            --primary-color: #007078; /* Ever Teal */
+            --primary-hover: #005A60;
+            --background-color: #F8F4E1; /* Humble Beige */
             --card-bg: #FFFFFF;
-            --text-main: #333333;
-            --text-muted: #666666;
+            --text-main: #222222;
+            --text-muted: #555555;
             --border-color: #D1D5DB;
-            --border-radius: 6px;
+            --border-radius: 8px;
             --success-color: #10B981;
-            --admin-color: #F59E0B;
+            --admin-color: #FFC600; /* Prime Yellow */
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Monda';
         }
 
         body {
             background-color: var(--background-color);
             color: var(--text-main);
-            padding: 2rem;
+            padding: 2.5rem;
             min-height: 100vh;
         }
 
-        /* --- LOGIN SCREEN STYLES --- */
+        /* --- LOGIN SCREEN STYLES (Aligned to the Right) --- */
         .login-wrapper {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: var(--background-color); z-index: 2000;
-            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(rgba(0, 112, 120, 0.1), rgba(0, 50, 55, 0.5)), 
+                        url('Images/Coverpage.jpg');
+            background-size: cover; background-position: center; z-index: 2000;
+            display: flex; align-items: center; justify-content: flex-end; /* Moved to right */
+            padding-right: 8%;
         }
         
         .login-card {
-            background-color: var(--card-bg); padding: 3rem; border-radius: var(--border-radius);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 6px solid var(--primary-color);
-            width: 90%; max-width: 800px;
-        }
-
-        .login-options { display: flex; gap: 2rem; align-items: stretch; margin-top: 2rem; }
-        
-        /* Base box styling with hover animation */
-        .login-box { 
-            flex: 1; padding: 2.5rem 2rem; border-radius: var(--border-radius); 
-            display: flex; flex-direction: column;
-            transition: all 0.2s ease;
+            background-color: var(--card-bg); 
+            padding: 3.5rem 3rem; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25); 
+            width: 90%; 
+            max-width: 480px;
+            clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 25px, 100% 100%, 25px 100%, 0 calc(100% - 25px));
             position: relative;
         }
-        
-        .login-box:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 6px;
+            background-color: var(--primary-color);
         }
 
-        /* Primary Action: Create New */
-        .login-box.primary-path {
-            background-color: #F0F9FA; /* Subtle teal tint */
-            border: 2px solid var(--primary-color);
-        }
-        
-        /* Secondary Action: Track/Edit (Yellow/Amber Theme) */
-        .login-box.secondary-path {
-            background-color: #FFFBEB; /* Soft warm yellow tint */
-            border: 2px solid #FCD34D; /* Warm amber border */
+        .login-box { 
+            padding: 2.2rem; border-radius: var(--border-radius); 
+            background-color: #F4F9F9; border: 1px solid #D2E3E5;
+            margin-top: 1.8rem;
         }
 
-        .login-box h3 { margin-bottom: 0.5rem; }
-        .login-box.primary-path h3 { color: var(--primary-color); }
-        .login-box.secondary-path h3 { color: #92400E; /* Dark amber text */ }
-        
-        .divider { 
-            display: flex; align-items: center; justify-content: center; 
-            font-weight: bold; color: var(--text-muted); font-size: 0.9rem;
+        /* --- TOGGLE LINK WITH ENHANCED HOVER EFFECT --- */
+        .toggle-link {
+            display: block; 
+            text-align: center; 
+            margin-top: 1.5rem;
+            color: var(--primary-color); 
+            font-size: 0.95rem; 
+            font-weight: 600;
+            text-decoration: none; 
+            cursor: pointer; 
+            padding: 0.6rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
         }
+        
+        .toggle-link:hover { 
+            background-color: rgba(0, 112, 120, 0.1);
+            color: var(--primary-hover); 
+            transform: translateY(-2px);
+            text-decoration: none; 
+        }
+
+        /* Prime Yellow Elements */
+        .btn-admin { background-color: var(--admin-color); color: #222222; font-weight: 700; }
+        .btn-admin:hover { background-color: #E6B200; }
+
+        .btn-warning { background-color: #D97706; color: white; }
+        .btn-warning:hover { background-color: #B45309; }
+
+        .btn-success { background-color: var(--success-color); color: white; }
+        .btn-success:hover { background-color: #059669; }
 
         /* --- HELPDESK CONTAINER --- */
         .helpdesk-container {
@@ -93,29 +110,35 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             flex-wrap: wrap; 
             gap: 1rem;
+            background: #ffffff;
+            padding: 1.5rem 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary-color);
         }
 
-        .form-header h2 { color: var(--primary-color); font-weight: 600; }
+        .form-header h2 { color: var(--primary-color); font-weight: 700; font-size: 1.5rem; }
 
         .layout-wrapper { display: flex; gap: 1.5rem; align-items: flex-start; }
         .main-column { flex: 1; min-width: 0; }
-        .log-column { width: 320px; flex-shrink: 0; }
+        .log-column { width: 340px; flex-shrink: 0; }
         .sticky-card { position: sticky; top: 2rem; }
 
         .form-card {
             background-color: var(--card-bg); padding: 2rem; border-radius: var(--border-radius);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 1.5rem; border-top: 4px solid var(--primary-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.04); margin-bottom: 1.5rem; border-top: 4px solid var(--primary-color);
         }
 
-        .admin-card { border-top-color: var(--admin-color); background-color: #FFFBEB; }
-        .context-card { border-top-color: #9CA3AF; }
+        .admin-card { border-top-color: var(--admin-color); background-color: #FFFDF5; }
+        .context-card { border-top-color: #6B7280; }
 
         .form-card h3 {
-            margin-bottom: 1.5rem; font-size: 1.1rem; color: var(--text-main);
-            border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem; font-size: 1.15rem; color: var(--text-main);
+            border-bottom: 1px solid var(--border-color); padding-bottom: 0.6rem;
+            font-weight: 600;
         }
 
         .grid-row { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
@@ -126,7 +149,7 @@
         label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
         .required { color: #DC2626; }
         .note { font-size: 0.8rem; color: #DC2626; font-weight: normal; margin-top: 0.25rem; display: block; }
-        .pending-note { color: #DC2626; font-weight: bold; }
+        .pending-note { color: #D97706; font-weight: bold; }
 
         input[type="text"], select, textarea {
             width: 100%; padding: 0.75rem; border: 1px solid var(--border-color);
@@ -134,7 +157,7 @@
         }
 
         input[type="text"]:focus, select:focus, textarea:focus {
-            outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(0, 122, 141, 0.1);
+            outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 112, 120, 0.15);
         }
 
         input[readonly], select:disabled { background-color: #F9FAFB; color: var(--text-muted); cursor: not-allowed; }
@@ -149,18 +172,17 @@
             background-color: #FAFAFA; transition: 0.2s; text-align: center; color: var(--text-muted);
             overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         }
-        .file-drop-area:hover { background-color: #F3F4F6; border-color: var(--primary-color); }
+        .file-drop-area:hover { background-color: #F0F9FA; border-color: var(--primary-color); }
         .file-drop-area input[type="file"] { position: absolute; left: 0; top: 0; height: 100%; width: 100%; cursor: pointer; opacity: 0; }
         .file-name-text { font-size: 0.85rem; max-width: 90%; overflow: hidden; text-overflow: ellipsis; display: inline-block; }
 
-        .form-actions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1rem; }
-        .btn { padding: 0.75rem 1.5rem; border: none; border-radius: var(--border-radius); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s; }
+        .form-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; flex-wrap: wrap; gap: 1rem; }
+        .btn { padding: 0.75rem 1.6rem; border: none; border-radius: var(--border-radius); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s; }
         .btn-primary { background-color: var(--primary-color); color: white; }
         .btn-primary:hover { background-color: var(--primary-hover); }
         .btn-secondary { background-color: #E5E7EB; color: var(--text-main); }
         .btn-secondary:hover { background-color: #D1D5DB; }
-        .btn-admin { background-color: var(--admin-color); color: white; }
-        .btn-admin:hover { background-color: #D97706; }
+        
         .btn-danger { background-color: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; padding: 0.4rem 1rem; font-size: 0.85rem; }
         .btn-danger:hover { background-color: #FECACA; }
 
@@ -168,12 +190,17 @@
 
         .request-item {
             padding: 0.75rem; margin-bottom: 0.5rem; background-color: #ffffff;
-            border: 1px solid #FCD34D; border-radius: 4px; cursor: pointer;
-            transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border: 1px solid #FCD34D; border-radius: 6px; cursor: pointer;
+            transition: all 0.2s; box-shadow: 0 1px 2px rgba(0,0,0,0.04);
         }
         .request-item:hover { background-color: #FEF3C7; border-color: var(--admin-color); transform: translateY(-1px); }
         .request-item-title { font-weight: 700; color: var(--primary-color); font-size: 0.9rem; margin-bottom: 0.2rem; }
         .request-item-meta { color: var(--text-muted); font-size: 0.8rem; }
+
+        .closed-request-item {
+            padding: 0.75rem; margin-bottom: 0.5rem; background-color: #F3F4F6;
+            border: 1px solid #D1D5DB; border-radius: 6px; display: flex; justify-content: space-between; align-items: center;
+        }
 
         .log-item { padding-bottom: 0.75rem; margin-bottom: 0.75rem; border-bottom: 1px solid #FDE68A; font-size: 0.85rem; color: #4B5563; }
         .log-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
@@ -185,13 +212,13 @@
             z-index: 3000; backdrop-filter: blur(3px);
         }
         .modal-content {
-            background-color: var(--card-bg); padding: 2rem; border-radius: var(--border-radius); text-align: center;
-            max-width: 500px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-top: 6px solid var(--success-color);
+            background-color: var(--card-bg); padding: 2.5rem; border-radius: var(--border-radius); text-align: center;
+            max-width: 500px; width: 90%; box-shadow: 0 15px 35px rgba(0,0,0,0.25); border-top: 6px solid var(--success-color);
         }
         .modal-req-id {
-            font-size: 1.15rem; font-weight: 700; color: var(--primary-color);
+            font-size: 1.2rem; font-weight: 700; color: var(--primary-color);
             background-color: #F0F9FA; border: 1px dashed var(--primary-color);
-            padding: 0.75rem; border-radius: 4px; margin: 1rem 0; letter-spacing: 1px;
+            padding: 0.8rem; border-radius: 6px; margin: 1.2rem 0; letter-spacing: 1px;
         }
     </style>
 </head>
@@ -200,34 +227,23 @@
     <!-- === LOGIN SCREEN === -->
     <div id="loginScreen" class="login-wrapper">
         <div class="login-card">
-            <h2 style="color: var(--primary-color); text-align: center;">Studio HelpDesk Gateway</h2>
-            <p style="text-align: center; color: var(--text-muted); margin-top: 0.5rem;">Corporate Communication Services</p>
+            <h2 style="color: var(--primary-color); text-align: center; font-size: 1.8rem; font-weight: 700;">Suzlon Studio HelpDesk</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-top: 0.5rem; font-size: 0.95rem;">Corporate Communication Services</p>
             
-            <div class="login-options">
-                <!-- Option 1: New Request (Primary Path) -->
-                <div class="login-box primary-path">
-                    <h3>Create New Request</h3>
-                    <p class="note" style="color: var(--text-muted); margin-bottom: 1.5rem;">Start a fresh task requirement for the Central Studio.</p>
-                    <div class="input-group" style="flex-grow: 1;">
-                        <label>Employee ID</label>
-                        <input type="text" id="loginEmpId" placeholder="e.g. 33890" value="33890">
-                    </div>
-                    <button class="btn btn-primary full-width" style="margin-top: 1rem;" onclick="handleNewRequestLogin()">Start New Request</button>
+            <div class="login-box">
+                <h3 id="loginTitle" style="color: var(--primary-color); margin-bottom: 0.5rem;">Create New Request</h3>
+                <p id="loginDesc" class="note" style="color: var(--text-muted); margin-bottom: 1.5rem;">Start a fresh task requirement for the Central Studio.</p>
+                
+                <div class="input-group full-width">
+                    <label id="loginInputLabel">Employee ID</label>
+                    <input type="text" id="loginInput" placeholder="e.g. 33890" value="33890">
+                    <span id="loginError" class="note hidden" style="margin-top: 0.5rem; display: block;">Task Code not found in database.</span>
                 </div>
-
-                <div class="divider">OR</div>
-
-                <!-- Option 2: Track/Edit Request (Yellow/Amber Path) -->
-                <div class="login-box secondary-path">
-                    <h3>Track / Edit Request</h3>
-                    <p class="note" style="color: #B45309; margin-bottom: 1.5rem;">Enter your existing Task Code to view, edit, or add files.</p>
-                    <div class="input-group" style="flex-grow: 1;">
-                        <label style="color: #92400E;">Task Code</label>
-                        <input type="text" id="loginTaskCode" placeholder="e.g. REQ-CORPCOM-10001" style="border-color: #FCD34D;">
-                        <span id="loginError" class="note hidden" style="margin-top: 0.5rem; display: block;">Task Code not found in database.</span>
-                    </div>
-                    <button class="btn btn-admin full-width" style="margin-top: 1rem;" onclick="handleTaskCodeLogin()">Access Request</button>
-                </div>
+                
+                <button id="loginActionBtn" class="btn btn-primary full-width" onclick="handleLoginAction()">Start New Request</button>
+                
+                <!-- Toggle Link -->
+                <a href="#" id="loginToggleLink" class="toggle-link" onclick="toggleLoginState(); return false;">Track or Edit an Existing Request</a>
             </div>
         </div>
     </div>
@@ -235,12 +251,10 @@
     <!-- === MAIN HELPDESK APP (Hidden initially) === -->
     <div class="helpdesk-container hidden" id="mainContainer">
         <header class="form-header">
-            <h2>Corporate Communication HelpDesk</h2>
+            <h2>Suzlon Corporate Communication HelpDesk</h2>
             
             <nav style="display: flex; gap: 1.5rem; align-items: center;">
-                <a href="presentation.html" target="_blank" style="color: var(--primary-color); text-decoration: none; font-weight: 600; font-size: 0.95rem; border-bottom: 2px solid transparent; transition: border-color 0.2s;" onmouseover="this.style.borderBottom='2px solid var(--primary-color)'" onmouseout="this.style.borderBottom='2px solid transparent'">
-                    📊 View Presentation
-                </a>
+
                 <button class="btn btn-admin" id="toggleAdminBtn" onclick="toggleAdminMode()">Switch to Admin Mode</button>
                 <button class="btn btn-secondary" onclick="signOut()">Sign Out / Home</button>
             </nav>
@@ -250,7 +264,7 @@
         <div id="adminPanel" class="form-card admin-card hidden">
             <h3 style="color: #92400E; border-bottom-color: #FDE68A;">Admin Control Panel</h3>
             <p class="note" style="color: #92400E; margin-bottom: 1.5rem; font-size: 0.9rem;">
-                <strong>Admin Mode Active:</strong> Edit "Requester" details to submit tasks on behalf of others. Click a request from the sidebar or search by Task Code below to modify it.
+                <strong>Admin Mode Active:</strong> Edit requester details, add stakeholder notes per specific task, close requests, or reopen resolved items.
             </p>
             <div class="grid-row">
                 <div class="input-group">
@@ -295,12 +309,12 @@
                         <!-- Task blocks injected by JavaScript -->
                     </div>
 
-                    <button type="button" class="btn btn-secondary full-width" style="border: 2px dashed var(--border-color);" onclick="addTask()">
+                    <button type="button" class="btn btn-secondary full-width" style="border: 2px dashed var(--border-color); background-color: #FFFFFF;" onclick="addTask()">
                         + Add Another Task
                     </button>
 
                     <!-- Footer / Submission Card -->
-                    <div class="form-card">
+                    <div class="form-card" style="margin-top: 1.5rem;">
                         <h3>Approval & Final Submission</h3>
                         <div class="grid-row" style="align-items: flex-start;">
                             <div class="input-group">
@@ -320,7 +334,7 @@
                             </div>
 
                             <div class="input-group hidden" id="approvalUploadMessage">
-                                <div style="background-color: #FFFBEB; border: 1px solid #FCD34D; padding: 1.5rem; border-radius: 6px; font-size: 0.95rem; color: #92400E; text-align: center; margin-top: 0.5rem;">
+                                <div style="background-color: #FFFDF5; border: 1px solid #FCD34D; padding: 1.5rem; border-radius: 6px; font-size: 0.95rem; color: #92400E; text-align: center; margin-top: 0.5rem;">
                                     <strong>Note:</strong> Timelines start upon approval upload.
                                 </div>
                             </div>
@@ -328,7 +342,10 @@
 
                         <div class="form-actions">
                             <button type="button" class="btn btn-secondary" onclick="resetForm()">Clear Form</button>
-                            <button type="submit" class="btn btn-primary" id="submitBtn">Submit Request</button>
+                            <div style="display: flex; gap: 0.75rem;">
+                                <button type="button" class="btn btn-warning hidden" id="closeRequestBtn" onclick="closeCurrentRequest()">Close Request</button>
+                                <button type="submit" class="btn btn-primary" id="submitBtn">Submit Request</button>
+                            </div>
                         </div>
                     </div>
 
@@ -338,14 +355,20 @@
                 <div class="log-column hidden" id="adminLogSidebar">
                     <div class="form-card admin-card sticky-card" style="padding: 1.5rem;">
                         
-                        <h3 style="color: #92400E; border-bottom-color: #FDE68A; margin-bottom: 1rem;">All Requests</h3>
-                        <div id="recentRequestsContainer" style="max-height: 250px; overflow-y: auto; padding-right: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px dashed #FDE68A; padding-bottom: 1rem;">
+                        <h3 style="color: #92400E; border-bottom-color: #FDE68A; margin-bottom: 1rem;">Active Requests</h3>
+                        <div id="recentRequestsContainer" style="max-height: 200px; overflow-y: auto; padding-right: 0.5rem; margin-bottom: 1.2rem; border-bottom: 1px dashed #FDE68A; padding-bottom: 1rem;">
                             <!-- List items injected here via JS -->
                         </div>
 
-                        <h3 style="color: #92400E; border-bottom-color: #FDE68A; margin-bottom: 1rem;">Selected Activity Log</h3>
-                        <div id="logContainer" style="max-height: 250px; overflow-y: auto; padding-right: 0.5rem;">
+                        <h3 style="color: #92400E; border-bottom-color: #FDE68A; margin-bottom: 1rem;">Closed Requests</h3>
+                        <div id="closedRequestsContainer" style="max-height: 180px; overflow-y: auto; padding-right: 0.5rem; margin-bottom: 1.2rem; border-bottom: 1px dashed #FDE68A; padding-bottom: 1rem;">
+                            <p class="note" style="color: #92400E;" id="emptyClosedText">No closed requests.</p>
+                        </div>
+
+                        <h3 style="color: #92400E; border-bottom-color: #FDE68A; margin-bottom: 1rem;">Activity Log</h3>
+                        <div id="logContainer" style="max-height: 220px; overflow-y: auto; padding-right: 0.5rem;">
                             <p class="note" style="color: #92400E;" id="emptyLogText">No request loaded.</p>
+
                         </div>
                     </div>
                 </div>
@@ -394,9 +417,9 @@
             "Suzlon Website - New page creation": 3, "Suzlon Website - Text updation": 1, "Word Template": 1
         };
 
-        // --- MOCK DATABASE (Populated with 10 dummy tasks) ---
+        // --- MOCK DATABASE ---
         const mockDatabase = {}; 
-        let globalEmployeeName = "Aditya Karande"; // Default mock name
+        let globalEmployeeName = "Aditya Karande";
         let globalEmployeeDept = "Central Studio";
         
         function populateDummyData() {
@@ -409,7 +432,7 @@
                 "Digital & Social Media": ["Social Media - Posts", "Suzlon Website - New page creation"]
             };
 
-            for (let i = 1; i <= 10; i++) {
+            for (let i = 1; i <= 8; i++) {
                 const reqId = `REQ-CORPCOM-100${i.toString().padStart(2, '0')}`;
                 const cat = dummyCategories[i % dummyCategories.length];
                 const subCatList = dummySubCats[cat];
@@ -421,11 +444,13 @@
                     department: dummyDepts[i % dummyDepts.length],
                     contact: "+91-90000000" + i.toString().padStart(2, '0'),
                     approval: i % 2 === 0 ? "now" : "later",
+                    status: i === 3 ? "Closed" : "Open",
                     tasks: [{ 
                         category: cat, 
                         subCategory: subCat, 
                         description: `We need a new ${subCat.toLowerCase()} created for the upcoming quarterly review. Please process this on priority.`,
-                        hasAttachment: i % 3 === 0 ? true : false
+                        hasAttachment: i % 3 === 0 ? true : false,
+                        stakeholderComment: i === 1 ? "Initial assets reviewed by stakeholder." : ""
                     }],
                     logs: [{ 
                         date: `28 Sep 2026, 10:${(i*5).toString().padStart(2, '0')}`, 
@@ -436,25 +461,71 @@
         }
         
         let isAdminMode = false;
+        let isEditMode = false;
         let taskCounter = 0;
         const tasksContainer = document.getElementById('tasks-container');
 
-        // --- LOGIN & AUTH FUNCTIONS ---
+        // --- DYNAMIC LOGIN & STATE SWITCHER ---
+        function toggleLoginState() {
+            isEditMode = !isEditMode;
+            
+            const title = document.getElementById('loginTitle');
+            const desc = document.getElementById('loginDesc');
+            const label = document.getElementById('loginInputLabel');
+            const input = document.getElementById('loginInput');
+            const btn = document.getElementById('loginActionBtn');
+            const link = document.getElementById('loginToggleLink');
+            const error = document.getElementById('loginError');
+
+            error.classList.add('hidden');
+
+            if (isEditMode) {
+                title.textContent = "Track / Edit Request";
+                desc.textContent = "Enter your existing Task Code to view, edit, or add files.";
+                desc.style.color = "#92400E";
+                label.textContent = "Task Code";
+                label.style.color = "#92400E";
+                input.placeholder = "e.g. REQ-CORPCOM-10001";
+                input.value = "";
+                input.style.borderColor = "var(--admin-color)";
+                btn.textContent = "Access Request";
+                btn.className = "btn btn-admin full-width";
+                link.textContent = "Back to Create New Request";
+            } else {
+                title.textContent = "Create New Request";
+                desc.textContent = "Start a fresh task requirement for the Central Studio.";
+                desc.style.color = "var(--text-muted)";
+                label.textContent = "Employee ID";
+                label.style.color = "var(--text-main)";
+                input.placeholder = "e.g. 33890";
+                input.value = "33890";
+                input.style.borderColor = "var(--border-color)";
+                btn.textContent = "Start New Request";
+                btn.className = "btn btn-primary full-width";
+                link.textContent = "Track or Edit an Existing Request";
+            }
+        }
+
+        function handleLoginAction() {
+            if (isEditMode) {
+                handleTaskCodeLogin();
+            } else {
+                handleNewRequestLogin();
+            }
+        }
+
         function handleNewRequestLogin() {
-            const empId = document.getElementById('loginEmpId').value.trim();
+            const empId = document.getElementById('loginInput').value.trim();
             if(!empId) {
                 alert("Please enter an Employee ID.");
                 return;
             }
 
-            // Assign mock name based on the ID entered for this demo
             const finalRequesterStr = `${globalEmployeeName} (${empId})`;
             
-            // Hide Login, Show Main App
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('mainContainer').classList.remove('hidden');
             
-            // Reset and prep form for new entry
             resetForm(false); 
             document.getElementById('requesterName').value = finalRequesterStr;
             document.getElementById('department').value = globalEmployeeDept;
@@ -462,7 +533,7 @@
         }
 
         function handleTaskCodeLogin() {
-            const code = document.getElementById('loginTaskCode').value.trim().toUpperCase();
+            const code = document.getElementById('loginInput').value.trim().toUpperCase();
             const errorMsg = document.getElementById('loginError');
             
             if (!code || !mockDatabase[code]) {
@@ -471,26 +542,26 @@
             }
             errorMsg.classList.add('hidden');
 
-            // Hide Login, Show Main App
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('mainContainer').classList.remove('hidden');
 
-            // Pre-load the requested task code
             resetForm(true);
             loadRequest(code);
         }
 
         function signOut() {
-            // Hide Main App, Show Login Screen
             document.getElementById('mainContainer').classList.add('hidden');
             document.getElementById('loginScreen').classList.remove('hidden');
-            document.getElementById('loginTaskCode').value = '';
-            document.getElementById('loginError').classList.add('hidden');
-
-            // Force turn off admin mode if active
-            if(isAdminMode) toggleAdminMode();
             
-            resetForm(true); // completely clear everything
+            if (isEditMode) {
+                toggleLoginState();
+            } else {
+                document.getElementById('loginInput').value = '33890';
+                document.getElementById('loginError').classList.add('hidden');
+            }
+
+            if(isAdminMode) toggleAdminMode();
+            resetForm(true);
         }
 
         // --- FILE UPLOAD HELPER ---
@@ -531,7 +602,8 @@
                 document.getElementById('deptStar').style.display = 'inline';
                 document.getElementById('contactStar').style.display = 'inline';
 
-                renderRecentRequests(); 
+                renderRecentRequests();
+                toggleStakeholderCommentsVisibility();
             } else {
                 btn.textContent = "Switch to Admin Mode";
                 btn.classList.replace('btn-secondary', 'btn-admin');
@@ -539,6 +611,7 @@
                 sidebar.classList.add('hidden');
                 document.getElementById('adminSearchError').classList.add('hidden');
                 document.getElementById('searchReqId').value = '';
+                document.getElementById('closeRequestBtn').classList.add('hidden');
                 
                 reqFields.forEach(id => {
                     const el = document.getElementById(id);
@@ -550,9 +623,10 @@
                 document.getElementById('deptStar').style.display = 'none';
                 document.getElementById('contactStar').style.display = 'none';
 
+                toggleStakeholderCommentsVisibility();
+
                 if(document.getElementById('currentEditId').value !== "") {
-                    // If we were editing, just clear it and prep a new task form
-                    const empId = document.getElementById('loginEmpId').value || '33890';
+                    const empId = document.getElementById('loginInput').value || '33890';
                     resetForm(false);
                     document.getElementById('requesterName').value = `${globalEmployeeName} (${empId})`;
                     document.getElementById('department').value = globalEmployeeDept;
@@ -561,19 +635,47 @@
             }
         }
 
+        function toggleStakeholderCommentsVisibility() {
+            document.querySelectorAll('.stakeholder-comment-box').forEach(box => {
+                if (isAdminMode) {
+                    box.classList.remove('hidden');
+                } else {
+                    box.classList.add('hidden');
+                }
+            });
+        }
+
         function renderRecentRequests() {
-            const container = document.getElementById('recentRequestsContainer');
-            const sortedRequests = Object.values(mockDatabase).sort((a, b) => b.id.localeCompare(a.id));
+            const activeContainer = document.getElementById('recentRequestsContainer');
+            const closedContainer = document.getElementById('closedRequestsContainer');
+            const emptyClosedText = document.getElementById('emptyClosedText');
+
+            const allReqs = Object.values(mockDatabase).sort((a, b) => b.id.localeCompare(a.id));
+            const activeReqs = allReqs.filter(r => r.status !== 'Closed');
+            const closedReqs = allReqs.filter(r => r.status === 'Closed');
             
-            container.innerHTML = sortedRequests.map(req => `
+            activeContainer.innerHTML = activeReqs.length ? activeReqs.map(req => `
                 <div class="request-item" onclick="loadRequest('${req.id}')">
                     <div class="request-item-title">${req.id}</div>
                     <div class="request-item-meta">${req.requester} | ${req.department}</div>
-                    <div class="request-item-meta" style="margin-top: 0.2rem; font-style: italic;">
-                        ${req.tasks[0]?.category}
-                    </div>
                 </div>
-            `).join('');
+            `).join('') : '<p class="note" style="color: #92400E;">No active requests.</p>';
+
+            if (closedReqs.length) {
+                emptyClosedText.classList.add('hidden');
+                closedContainer.innerHTML = closedReqs.map(req => `
+                    <div class="closed-request-item">
+                        <div>
+                            <div style="font-weight: 700; font-size: 0.85rem; color: #4B5563;">${req.id}</div>
+                            <div style="font-size: 0.75rem; color: #6B7280;">${req.requester}</div>
+                        </div>
+                        <button type="button" class="btn btn-success" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" onclick="reopenRequest('${req.id}')">Reopen</button>
+                    </div>
+                `).join('');
+            } else {
+                emptyClosedText.classList.remove('hidden');
+                closedContainer.innerHTML = '<p class="note" style="color: #92400E;" id="emptyClosedText">No closed requests.</p>';
+            }
         }
 
         function loadRequest(clickedReqId = null) {
@@ -597,6 +699,10 @@
 
             document.getElementById('currentEditId').value = reqId;
             document.getElementById('submitBtn').textContent = "Update Request";
+            
+            if (isAdminMode) {
+                document.getElementById('closeRequestBtn').classList.remove('hidden');
+            }
 
             document.getElementById('requesterName').value = data.requester;
             document.getElementById('department').value = data.department;
@@ -621,6 +727,7 @@
                 subCatSelect.dispatchEvent(new Event('change')); 
 
                 document.getElementById(`description-${currentId}`).value = task.description;
+                document.getElementById(`stakeholderComment-${currentId}`).value = task.stakeholderComment || "";
 
                 if (task.hasAttachment) {
                     const label = document.getElementById(`taskFileName-${currentId}`);
@@ -638,6 +745,35 @@
                     </div>
                 `).join('');
                 logContainer.innerHTML = logHTML;
+            }
+        }
+
+        function closeCurrentRequest() {
+            const editId = document.getElementById('currentEditId').value;
+            if (!editId) return;
+
+            const timestamp = new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            mockDatabase[editId].status = "Closed";
+            mockDatabase[editId].logs.unshift({
+                date: timestamp,
+                action: "Request closed by task stakeholder/admin."
+            });
+
+            alert(`Request ${editId} has been successfully closed.`);
+            renderRecentRequests();
+            loadRequest(editId);
+        }
+
+        function reopenRequest(reqId) {
+            const timestamp = new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            if (mockDatabase[reqId]) {
+                mockDatabase[reqId].status = "Open";
+                mockDatabase[reqId].logs.unshift({
+                    date: timestamp,
+                    action: "Request reopened by admin."
+                });
+                renderRecentRequests();
+                loadRequest(reqId);
             }
         }
 
@@ -689,6 +825,12 @@
                                 <input type="file" id="taskAttachment-${taskId}" name="taskAttachment[]" multiple onchange="updateFileName(this, 'taskFileName-${taskId}')">
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Stakeholder Note Specific to This Task -->
+                    <div class="input-group full-width stakeholder-comment-box ${isAdminMode ? '' : 'hidden'}" style="margin-top: 1rem; background-color: #FFFDF5; padding: 1rem; border: 1px solid #FCD34D; border-radius: 6px;">
+                        <label style="color: #92400E; margin-bottom: 0.3rem;">Stakeholder Note (Task #${taskId})</label>
+                        <textarea id="stakeholderComment-${taskId}" rows="2" placeholder="Add specific feedback or comments on this particular issue..." style="border-color: #FDE68A; background-color: #fff;"></textarea>
                     </div>
                 </div>
             `;
@@ -788,6 +930,7 @@
             document.querySelector('input[name="approvalStatus"]').dispatchEvent(new Event('change'));
             document.getElementById('currentEditId').value = "";
             document.getElementById('submitBtn').textContent = "Submit Request";
+            document.getElementById('closeRequestBtn').classList.add('hidden');
             
             if(document.getElementById('logContainer')) {
                 document.getElementById('logContainer').innerHTML = '<p class="note" style="color: #92400E;">No request loaded.</p>';
@@ -800,8 +943,7 @@
             document.getElementById('approvalAttachment').value = "";
             
             if(!isAdminMode) {
-                // If resetting form for standard user, we re-apply their logged-in details
-                const empId = document.getElementById('loginEmpId').value || '33890';
+                const empId = document.getElementById('loginInput').value || '33890';
                 document.getElementById('requesterName').value = `${globalEmployeeName} (${empId})`;
                 document.getElementById('department').value = globalEmployeeDept;
                 document.getElementById('contact').value = "+91-9876543210";
@@ -831,6 +973,7 @@
                 department: document.getElementById('department').value,
                 contact: document.getElementById('contact').value,
                 approval: document.querySelector('input[name="approvalStatus"]:checked').value,
+                status: isUpdate ? mockDatabase[editId].status : "Open",
                 tasks: [],
                 logs: isUpdate ? mockDatabase[editId].logs : [{
                     date: timestamp,
@@ -849,11 +992,21 @@
                 const id = block.getAttribute('data-task-id');
                 const fileInput = document.getElementById(`taskAttachment-${id}`);
                 const hasFiles = fileInput.files && fileInput.files.length > 0;
+                const commentBox = document.getElementById(`stakeholderComment-${id}`);
+                const taskComment = commentBox ? commentBox.value.trim() : "";
+
+                if (taskComment && isUpdate) {
+                    requestData.logs.unshift({
+                        date: timestamp,
+                        action: `[Task #${id} Stakeholder Note]: ${taskComment}`
+                    });
+                }
                 
                 requestData.tasks.push({
                     category: document.getElementById(`category-${id}`).value,
                     subCategory: document.getElementById(`subCategory-${id}`).value,
                     description: document.getElementById(`description-${id}`).value,
+                    stakeholderComment: taskComment,
                     hasAttachment: hasFiles || (isUpdate && mockDatabase[editId].tasks.find(t => t.category === document.getElementById(`category-${id}`).value)?.hasAttachment)
                 });
             });
@@ -877,7 +1030,6 @@
             if (isAdminMode && document.getElementById('currentEditId').value) {
                loadRequest(); 
             } else {
-                // Return home / log out if they submitted a new request
                 signOut();
             }
         }
@@ -885,7 +1037,6 @@
         // --- INIT ---
         window.addEventListener('DOMContentLoaded', () => {
             populateDummyData(); 
-            // We do NOT call addTask() here because we want the user to go through the login screen first
         });
     </script>
 </body>
